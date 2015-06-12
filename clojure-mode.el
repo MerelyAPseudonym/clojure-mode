@@ -396,7 +396,8 @@ Called by `imenu--generic-function'."
        (1 font-lock-keyword-face)
        (2 font-lock-function-name-face nil t))
       ;; lambda arguments - %, %1, %2, etc
-      ("\\<%[1-9]?" (0 font-lock-variable-name-face))
+      ("\\<%[1-9]?"
+       (0 font-lock-variable-name-face))
       ;; Special forms
       (,(concat
          "("
@@ -439,7 +440,8 @@ Called by `imenu--generic-function'."
          "\\>")
        0 font-lock-builtin-face)
       ;; Dynamic variables - *something* or @*something*
-      ("\\(?:\\<\\|/\\)@?\\(\\*[a-z-]*\\*\\)\\>" 1 font-lock-variable-name-face)
+      ("\\(?:\\<\\|/\\)@?\\(\\*[a-z-]*\\*\\)\\>"
+       1 font-lock-variable-name-face)
       ;; Global constants - nil, true, false
       (,(concat
          "\\<"
@@ -448,20 +450,27 @@ Called by `imenu--generic-function'."
          "\\>")
        0 font-lock-constant-face)
       ;; Character literals - \1, \a, \newline, \u0000
-      ("\\\\\\([[:punct:]]\\|[a-z0-9]+\\>\\)" 0 'clojure-character-face)
+      ("\\\\\\([[:punct:]]\\|[a-z0-9]+\\>\\)"
+       0 'clojure-character-face)
       ;; Constant values (keywords), including as metadata e.g. ^:static
-      ("\\<^?\\(:\\(\\sw\\|\\s_\\)+\\(\\>\\|\\_>\\)\\)" 1 'clojure-keyword-face)
+      ("\\<^?\\(:\\(\\sw\\|\\s_\\)+\\(\\>\\|\\_>\\)\\)"
+       1 'clojure-keyword-face)
       ;; cljx annotations (#+clj and #+cljs)
-      ("#\\+cljs?\\>" 0 font-lock-preprocessor-face)
+      ("#\\+cljs?\\>"
+       0 font-lock-preprocessor-face)
       ;; Java interop highlighting
       ;; CONST SOME_CONST (optionally prefixed by /)
-      ("\\(?:\\<\\|/\\)\\([A-Z]+\\|\\([A-Z]+_[A-Z1-9_]+\\)\\)\\>" 1 font-lock-constant-face)
+      ("\\(?:\\<\\|/\\)\\([A-Z]+\\|\\([A-Z]+_[A-Z1-9_]+\\)\\)\\>"
+       1 font-lock-constant-face)
       ;; .foo .barBaz .qux01 .-flibble .-flibbleWobble
-      ("\\<\\.-?[a-z][a-zA-Z0-9]*\\>" 0 'clojure-interop-method-face)
+      ("\\<\\.-?[a-z][a-zA-Z0-9]*\\>"
+       0 'clojure-interop-method-face)
       ;; Foo Bar$Baz Qux_ World_OpenUDP Foo. Babylon15.
-      ("\\(?:\\<\\|\\.\\|/\\|#?^\\)\\([A-Z][a-zA-Z0-9_]*[a-zA-Z0-9$_]+\\.?\\>\\)" 1 font-lock-type-face)
+      ("\\(?:\\<\\|\\.\\|/\\|#?^\\)\\([A-Z][a-zA-Z0-9_]*[a-zA-Z0-9$_]+\\.?\\>\\)"
+       1 font-lock-type-face)
       ;; foo.bar.baz
-      ("\\<^?\\([a-z][a-z0-9_-]+\\.\\([a-z][a-z0-9_-]*\\.?\\)+\\)" 1 font-lock-type-face)
+      ("\\<^?\\([a-z][a-z0-9_-]+\\.\\([a-z][a-z0-9_-]*\\.?\\)+\\)"
+       1 font-lock-type-face)
       ;; (ns namespace) - special handling for single segment namespaces
       (,(concat "(\\<ns\\>[ \r\n\t]*"
                 ;; Possibly metadata
@@ -470,9 +479,11 @@ Called by `imenu--generic-function'."
                 "\\([a-z0-9-]+\\)")
        (1 font-lock-type-face nil t))
       ;; foo/ Foo/ @Foo/ /FooBar
-      ("\\(?:\\<\\|\\.\\)@?\\([a-zA-Z][a-zA-Z0-9$_-]*\\)/" 1 font-lock-type-face)
+      ("\\(?:\\<\\|\\.\\)@?\\([a-zA-Z][a-zA-Z0-9$_-]*\\)/"
+       1 font-lock-type-face)
       ;; fooBar
-      ("\\(?:\\<\\|/\\)\\([a-z]+[A-Z]+[a-zA-Z0-9$]*\\>\\)" 1 'clojure-interop-method-face)
+      ("\\(?:\\<\\|/\\)\\([a-z]+[A-Z]+[a-zA-Z0-9$]*\\>\\)"
+       1 'clojure-interop-method-face)
       ;; Highlight grouping constructs in regular expressions
       (clojure-font-lock-regexp-groups
        (1 'font-lock-regexp-grouping-construct prepend))))
