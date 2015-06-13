@@ -455,9 +455,15 @@ Called by `imenu--generic-function'."
       ;; Constant values (keywords), including as metadata e.g. ^:static
       ("\\<^?\\(:\\(\\sw\\|\\s_\\)+\\(\\>\\|\\_>\\)\\)"
        1 'clojure-keyword-face)
+
       ;; cljx annotations (#+clj and #+cljs)
-      ("#\\+cljs?\\>"
+      (,(rx "#+clj"
+            (zero-or-one ?s)
+            word-end)
        0 font-lock-preprocessor-face)
+      ;; before: "#\\+cljs?\\>"
+      ;; after:  "#\\+cljs?\\>"
+
       ;; Java interop highlighting
 
       ;; CONST SOME_CONST (optionally prefixed by /)
