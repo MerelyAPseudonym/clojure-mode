@@ -459,9 +459,17 @@ Called by `imenu--generic-function'."
       ("#\\+cljs?\\>"
        0 font-lock-preprocessor-face)
       ;; Java interop highlighting
+
       ;; CONST SOME_CONST (optionally prefixed by /)
-      ("\\(?:\\<\\|/\\)\\([A-Z]+\\|\\([A-Z]+_[A-Z1-9_]+\\)\\)\\>"
+      (,(rx (or word-start ?/)
+            (submatch (or (one-or-more (any "A-Z"))
+                          (submatch (one-or-more (any "A-Z"))
+                                    ?_
+                                    (one-or-more (any "A-Z" "1-9" ?_)))))
+            word-end)
        1 font-lock-constant-face)
+      ;; before: "\\(?:\\<\\|/\\)\\([A-Z]+\\|\\([A-Z]+_[A-Z1-9_]+\\)\\)\\>"
+      ;; after:  "\\(?:\\<\\|/\\)\\([A-Z]+\\|\\([A-Z]+_[1-9A-Z_]+\\)\\)\\>"
 
       ;; .foo .barBaz .qux01 .-flibble .-flibbleWobble
       (,(rx word-start
