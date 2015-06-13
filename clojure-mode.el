@@ -465,9 +465,21 @@ Called by `imenu--generic-function'."
       ;; .foo .barBaz .qux01 .-flibble .-flibbleWobble
       ("\\<\\.-?[a-z][a-zA-Z0-9]*\\>"
        0 'clojure-interop-method-face)
+
       ;; Foo Bar$Baz Qux_ World_OpenUDP Foo. Babylon15.
-      ("\\(?:\\<\\|\\.\\|/\\|#?^\\)\\([A-Z][a-zA-Z0-9_]*[a-zA-Z0-9$_]+\\.?\\>\\)"
+      (,(rx (or word-start
+                ?.
+                ?/
+                (and (zero-or-one ?#) ?^))
+            (submatch (any "A-Z")
+                      (zero-or-more (any "a-z" "A-Z" "0-9" ?_))
+                      (one-or-more (any "a-z" "A_Z" "0-9" ?$ ?_))
+                      (zero-or-one ?.)
+                      word-end))
        1 font-lock-type-face)
+      ;; before: "\\(?:\\<\\|\\.\\|/\\|#?^\\)\\([A-Z][a-zA-Z0-9_]*[a-zA-Z0-9$_]+\\.?\\>\\)"
+      ;; after:  "\\(?:\\<\\|\\.\\|/\\|#?\\^\\)\\([A-Z][0-9A-Z_a-z]*[$0-9AZ_a-z]+\\.?\\>\\)"
+
       ;; foo.bar.baz
       ("\\<^?\\([a-z][a-z0-9_-]+\\.\\([a-z][a-z0-9_-]*\\.?\\)+\\)"
        1 font-lock-type-face)
