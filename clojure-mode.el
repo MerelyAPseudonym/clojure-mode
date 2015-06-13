@@ -462,9 +462,17 @@ Called by `imenu--generic-function'."
       ;; CONST SOME_CONST (optionally prefixed by /)
       ("\\(?:\\<\\|/\\)\\([A-Z]+\\|\\([A-Z]+_[A-Z1-9_]+\\)\\)\\>"
        1 font-lock-constant-face)
+
       ;; .foo .barBaz .qux01 .-flibble .-flibbleWobble
-      ("\\<\\.-?[a-z][a-zA-Z0-9]*\\>"
+      (,(rx word-start
+            ?.
+            (zero-or-one ?-)
+            (any "a-z")
+            (zero-or-more (any "a-z" "A-Z" "0-9"))
+            word-end)
        0 'clojure-interop-method-face)
+      ;; before: "\\<\\.-?[a-z][a-zA-Z0-9]*\\>"
+      ;; after:  "\\<\\.-?[a-z][0-9A-Za-z]*\\>"
 
       ;; Foo Bar$Baz Qux_ World_OpenUDP Foo. Babylon15.
       (,(rx (or word-start
