@@ -503,8 +503,19 @@ Called by `imenu--generic-function'."
       ;; after:  "\\(?:\\<\\|\\.\\|/\\|#?\\^\\)\\([A-Z][0-9A-Z_a-z]*[$0-9AZ_a-z]+\\.?\\>\\)"
 
       ;; foo.bar.baz
-      ("\\<^?\\([a-z][a-z0-9_-]+\\.\\([a-z][a-z0-9_-]*\\.?\\)+\\)"
+      (,(rx word-start
+            (zero-or-one ?^)
+            (submatch (and (any "a-z")
+                           (one-or-more (any "a-z" "0-9" ?_ ?-)))
+                      ?.
+                      (one-or-more
+                       (submatch (and (any "a-z")
+                                      (zero-or-more (any "a-z" "0-9" ?_ ?-))
+                                      (zero-or-one ?.))))))
        1 font-lock-type-face)
+      ;; before: "\\<^?\\([a-z][a-z0-9_-]+\\.\\([a-z][a-z0-9_-]*\\.?\\)+\\)"
+      ;; after:  "\\<\\^?\\([a-z][-0-9_a-z]+\\.\\([a-z][-0-9_a-z]*\\.?\\)+\\)"
+
       ;; (ns namespace) - special handling for single segment namespaces
       (,(concat "(\\<ns\\>[ \r\n\t]*"
                 ;; Possibly metadata
