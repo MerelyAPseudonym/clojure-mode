@@ -517,12 +517,25 @@ Called by `imenu--generic-function'."
       ;; after:  "\\<\\^?\\([a-z][-0-9_a-z]+\\.\\([a-z][-0-9_a-z]*\\.?\\)+\\)"
 
       ;; (ns namespace) - special handling for single segment namespaces
-      (,(concat "(\\<ns\\>[ \r\n\t]*"
-                ;; Possibly metadata
-                "\\(?:\\^?{[^}]+}[ \r\n\t]*\\)*"
-                ;; namespace
-                "\\([a-z0-9-]+\\)")
+      (,(rx ?(
+            word-start
+            "ns"
+            word-end
+            (zero-or-more
+             (any ?\s ?\r ?\n ?\t) ; TODO alternative: (any " \r\n\t")
+             )
+            ;; Possibly metadata
+            (zero-or-more (zero-or-one ?^)
+                          ?{
+                          (one-or-more (not (any ?})))
+                          ?}
+                          (zero-or-more (any ?\s ?\r ?\n ?\t)))
+            ;; namespace
+            (submatch (one-or-more (any "a-z" "0-9" ?-)))))
        (1 font-lock-type-face nil t))
+      ;; before: "(\\<ns\\>[ \r\n\t]*\\(?:\\^?{[^}]+}[ \r\n\t]*\\)*\\([a-z0-9-]+\\)"
+      ;; after:  "(\\<ns\\>[ \r\n\t]*\\(?:\\^?{[^}]+}[ \r\n\t]*\\)*\\([-0-9a-z]+\\)"
+
       ;; foo/ Foo/ @Foo/ /FooBar
       ("\\(?:\\<\\|\\.\\)@?\\([a-zA-Z][a-zA-Z0-9$_-]*\\)/"
        1 font-lock-type-face)
