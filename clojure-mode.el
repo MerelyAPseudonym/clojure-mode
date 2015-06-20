@@ -351,27 +351,26 @@ Called by `imenu--generic-function'."
 (defconst clojure-font-lock-keywords
   (eval-when-compile
     `(;; Top-level variable definition
-      ,(rx ?(
-           (zero-or-one "clojure.core/")
-           (submatch (or "def" "defonce"))
-           ;; variable declarations
-           word-end
-           ;; Any whitespace
-           (zero-or-more (any ?\s ?\r ?\n ?\t))
-           ;; Possibly type or metadata
-           (zero-or-more (zero-or-one ?#)
-                         ?^
-                         (or (and ?{
-                                  (zero-or-more (not (any ?})))
-                                  ?})
-                             (one-or-more (syntax word)))
-                         (zero-or-more (any ?\s ?\r ?\n ?\t)))
-           (zero-or-one (submatch (one-or-more (syntax word)))))
+      (,(rx "("
+            (zero-or-one "clojure.core/")
+            (submatch (or "def" "defonce"))
+            ;; variable declarations
+            word-end
+            ;; Any whitespace
+            (zero-or-more (any ?\s ?\r ?\n ?\t))
+            ;; Possibly type or metadata
+            (zero-or-more (zero-or-one ?#)
+                          ?^
+                          (or (and ?{
+                                   (zero-or-more (not (any ?})))
+                                   ?})
+                              (one-or-more (syntax word)))
+                          (zero-or-more (any ?\s ?\r ?\n ?\t)))
+            (zero-or-one (submatch (one-or-more (syntax word)))))
        (1 font-lock-keyword-face)
        (2 font-lock-variable-name-face nil t))
-    ;; before: "(\\(?:clojure.core/\\)?\\(\\(?:def\\(?:once\\)?\\)\\)\\>[ \r\n\t]*\\(?:#?^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
-    ;; after:  "(\\(?:clojure\\.core/\\)?\\(\\(?:def\\(?:once\\)?\\)\\)\\>[ \r\n\t]*\\(?:#?\\^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
-
+      ;; before: "(\\(?:clojure.core/\\)?\\(\\(?:def\\(?:once\\)?\\)\\)\\>[ \r\n\t]*\\(?:#?^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
+      ;; after:  "(\\(?:clojure\\.core/\\)?\\(\\(?:def\\(?:once\\)?\\)\\)\\>[ \r\n\t]*\\(?:#?\\^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
 
       ;; Type definition
       (,(concat "(\\(?:clojure.core/\\)?\\("
