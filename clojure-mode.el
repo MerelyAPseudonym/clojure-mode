@@ -537,8 +537,15 @@ Called by `imenu--generic-function'."
       ;; after:  "(\\<ns\\>[ \r\n\t]*\\(?:\\^?{[^}]+}[ \r\n\t]*\\)*\\([-0-9a-z]+\\)"
 
       ;; foo/ Foo/ @Foo/ /FooBar
-      ("\\(?:\\<\\|\\.\\)@?\\([a-zA-Z][a-zA-Z0-9$_-]*\\)/"
+      (,(rx (or word-start ?.)
+            (zero-or-one ?@)
+            (submatch (any "a-z" "A-Z")
+                      (zero-or-more (any "a-z" "A-Z" "0-9" ?$ ?_ ?-)))
+            ?/)
        1 font-lock-type-face)
+      ;; before: "\\(?:\\<\\|\\.\\)@?\\([a-zA-Z][a-zA-Z0-9$_-]*\\)/"
+      ;; after:  "\\(?:\\<\\|\\.\\)@?\\([A-Za-z][-$0-9A-Z_a-z]*\\)/"
+
       ;; fooBar
       ("\\(?:\\<\\|/\\)\\([a-z]+[A-Z]+[a-zA-Z0-9$]*\\>\\)"
        1 'clojure-interop-method-face)
