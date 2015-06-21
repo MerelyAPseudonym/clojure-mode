@@ -475,21 +475,21 @@ Called by `imenu--generic-function'."
       ;; before: "(\\(?:clojure.core/\\)?\\(->>?\\|\\.\\.\\|a\\(?:nd\\|s->\\)\\|binding\\|c\\(?:ase\\|ond\\(?:->>?\\|p\\)?\\)\\|d\\(?:eclare\\|o\\(?:all\\|run\\|s\\(?:eq\\|ync\\)\\|t\\(?:imes\\|o\\)\\)\\)\\|for\\|gen-\\(?:\\(?:and-\\(?:\\(?:load\\|save\\)-\\)\\)?class\\)\\|handle\\(?:r-case\\)?\\|i\\(?:f-\\(?:let\\|not\\|some\\)\\|mport\\|n-ns\\)\\|l\\(?:etfn\\|oad\\)\\|ns\\|or\\|refer\\|unimport\\|w\\(?:hen\\(?:-\\(?:first\\|let\\|not\\|some\\)\\)?\\|ith-\\(?:local-vars\\|open\\|redefs\\(?:-fn\\)?\\)\\)\\)\\>"
       ;; after:  "(\\(?:clojure\\.core/\\)?\\(\\(?:->>?\\|\\.\\.\\|a\\(?:nd\\|s->\\)\\|binding\\|c\\(?:ase\\|ond\\(?:->>?\\|p\\)?\\)\\|d\\(?:eclare\\|o\\(?:all\\|run\\|s\\(?:eq\\|ync\\)\\|t\\(?:imes\\|o\\)\\)\\)\\|for\\|gen-\\(?:\\(?:and-\\(?:\\(?:load\\|save\\)-\\)\\)?class\\)\\|handle\\(?:r-case\\)?\\|i\\(?:f-\\(?:let\\|not\\|some\\)\\|mport\\|n-ns\\)\\|l\\(?:etfn\\|oad\\)\\|ns\\|or\\|refer\\|unimport\\|w\\(?:hen\\(?:-\\(?:first\\|let\\|not\\|some\\)\\)?\\|ith-\\(?:local-vars\\|open\\|redefs\\(?:-fn\\)?\\)\\)\\)\\)\\>"
 
-      (,(concat
-         "\\<"
-         (regexp-opt
-          '("*1" "*2" "*3" "*agent*"
-            "*allow-unresolved-vars*" "*assert*" "*clojure-version*"
-            "*command-line-args*" "*compile-files*"
-            "*compile-path*" "*e" "*err*" "*file*" "*flush-on-newline*"
-            "*in*" "*macro-meta*" "*math-context*" "*ns*" "*out*"
-            "*print-dup*" "*print-length*" "*print-level*"
-            "*print-meta*" "*print-readably*"
-            "*read-eval*" "*source-path*"
-            "*use-context-classloader*" "*warn-on-reflection*")
-          t)
-         "\\>")
+      (,(rx word-start
+            (submatch (or "*1" "*2" "*3" "*agent*"
+                          "*allow-unresolved-vars*" "*assert*" "*clojure-version*"
+                          "*command-line-args*" "*compile-files*"
+                          "*compile-path*" "*e" "*err*" "*file*" "*flush-on-newline*"
+                          "*in*" "*macro-meta*" "*math-context*" "*ns*" "*out*"
+                          "*print-dup*" "*print-length*" "*print-level*"
+                          "*print-meta*" "*print-readably*"
+                          "*read-eval*" "*source-path*"
+                          "*use-context-classloader*" "*warn-on-reflection*"))
+            word-end)
        0 font-lock-builtin-face)
+      ;; before: "\\<\\(\\*\\(?:\\(?:a\\(?:gent\\|llow-unresolved-vars\\|ssert\\)\\|c\\(?:lojure-version\\|om\\(?:mand-line-args\\|pile-\\(?:files\\|path\\)\\)\\)\\|err\\|f\\(?:\\(?:il\\|lush-on-newlin\\)e\\)\\|in\\|ma\\(?:cro-meta\\|th-context\\)\\|ns\\|out\\|print-\\(?:dup\\|le\\(?:ngth\\|vel\\)\\|meta\\|readably\\)\\|read-eval\\|source-path\\|use-context-classloader\\|warn-on-reflection\\)\\*\\|[123e]\\)\\)\\>"
+      ;; after:  "\\<\\(\\(?:\\*\\(?:\\(?:a\\(?:gent\\|llow-unresolved-vars\\|ssert\\)\\|c\\(?:lojure-version\\|om\\(?:mand-line-args\\|pile-\\(?:files\\|path\\)\\)\\)\\|err\\|f\\(?:\\(?:il\\|lush-on-newlin\\)e\\)\\|in\\|ma\\(?:cro-meta\\|th-context\\)\\|ns\\|out\\|print-\\(?:dup\\|le\\(?:ngth\\|vel\\)\\|meta\\|readably\\)\\|read-eval\\|source-path\\|use-context-classloader\\|warn-on-reflection\\)\\*\\|[123e]\\)\\)\\)\\>"
+
       ;; Dynamic variables - *something* or @*something*
       ("\\(?:\\<\\|/\\)@?\\(\\*[a-z-]*\\*\\)\\>"
        1 font-lock-variable-name-face)
