@@ -422,13 +422,22 @@ Called by `imenu--generic-function'."
       ;; after:  "(\\(?:[-.a-z]+/\\)?\\(def[-a-z]*-?\\)\\>[ \r\n\t]*\\(?:#?\\^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
 
       ;; (fn name? args ...)
-      (,(concat "(\\(?:clojure.core/\\)?\\(fn\\)[ \t]+"
-                ;; Possibly type
-                "\\(?:#?^\\sw+[ \t]*\\)?"
-                ;; Possibly name
-                "\\(t\\sw+\\)?" )
+      (,(rx ?(
+            (zero-or-one "clojure.core/")
+            (submatch "fn")
+            (one-or-more (any ?\s ?\t))
+            ;; Possibly type
+            (zero-or-one (zero-or-one ?#)
+                         ?^
+                         (one-or-more (syntax word))
+                         (zero-or-more (any ?\s ?\t)))
+            ;; Possible name
+            (zero-or-one (submatch ?t (one-or-more (syntax word)))))
        (1 font-lock-keyword-face)
        (2 font-lock-function-name-face nil t))
+      ;; before: "(\\(?:clojure.core/\\)?\\(fn\\)[ \t]+\\(?:#?^\\sw+[ \t]*\\)?\\(t\\sw+\\)?"
+      ;; after:  "(\\(?:clojure\\.core/\\)?\\(fn\\)[ \t]+\\(?:#?\\^\\sw+[ \t]*\\)?\\(t\\sw+\\)?"
+
       ;; lambda arguments - %, %1, %2, etc
       ("\\<%[1-9]?"
        (0 font-lock-variable-name-face))
