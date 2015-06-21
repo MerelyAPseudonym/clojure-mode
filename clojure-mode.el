@@ -397,16 +397,30 @@ Called by `imenu--generic-function'."
 
       ;; Function definition (anything that starts with def and is not
       ;; listed above)
-      (,(concat "(\\(?:[a-z\.-]+/\\)?\\(def\[a-z\-\]*-?\\)"
-                ;; Function declarations
-                "\\>"
-                ;; Any whitespace
-                "[ \r\n\t]*"
-                ;; Possibly type or metadata
-                "\\(?:#?^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*"
-                "\\(\\sw+\\)?")
+      (,(rx "("
+            (zero-or-one (one-or-more (any "a-z" ?. ?-))
+                         ?/)
+            (submatch "def"
+                      (zero-or-more (any "a-z" ?-))
+                      (zero-or-one ?-))
+            ;; Function declarations
+            word-end
+            ;; Any whitespace
+            (zero-or-more (any ?\s ?\r ?\n ?\t))
+            ;; Possibly type or metadata
+            (zero-or-more (zero-or-one ?#)
+                          ?^
+                          (or (and ?{
+                                   (zero-or-more (not (any ?})))
+                                   ?})
+                              (one-or-more (syntax word)))
+                          (zero-or-more (any ?\s ?\r ?\n ?\t)))
+            (zero-or-one (submatch (one-or-more (syntax word)))))
        (1 font-lock-keyword-face)
        (2 font-lock-function-name-face nil t))
+      ;; before: "(\\(?:[a-z.-]+/\\)?\\(def[a-z-]*-?\\)\\>[ \r\n\t]*\\(?:#?^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
+      ;; after:  "(\\(?:[-.a-z]+/\\)?\\(def[-a-z]*-?\\)\\>[ \r\n\t]*\\(?:#?\\^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
+
       ;; (fn name? args ...)
       (,(concat "(\\(?:clojure.core/\\)?\\(fn\\)[ \t]+"
                 ;; Possibly type
