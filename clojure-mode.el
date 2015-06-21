@@ -596,8 +596,16 @@ Called by `imenu--generic-function'."
       ;; after:  "\\(?:\\<\\|\\.\\)@?\\([A-Za-z][-$0-9A-Z_a-z]*\\)/"
 
       ;; fooBar
-      ("\\(?:\\<\\|/\\)\\([a-z]+[A-Z]+[a-zA-Z0-9$]*\\>\\)"
+      (,(rx (or word-start
+                ?/)
+            (submatch (one-or-more (any "a-z"))
+                      (one-or-more (any "A-Z"))
+                      (zero-or-more (any "a-z" "A-Z" "0-9" ?$))
+                      word-end))
        1 'clojure-interop-method-face)
+      ;; before: "\\(?:\\<\\|/\\)\\([a-z]+[A-Z]+[a-zA-Z0-9$]*\\>\\)"
+      ;; after:  "\\(?:\\<\\|/\\)\\([a-z]+[A-Z]+[$0-9A-Za-z]*\\>\\)"
+
       ;; Highlight grouping constructs in regular expressions
       (clojure-font-lock-regexp-groups
        (1 'font-lock-regexp-grouping-construct prepend))))
