@@ -373,7 +373,7 @@ Called by `imenu--generic-function'."
       ;; after:  "(\\(?:clojure\\.core/\\)?\\(\\(?:def\\(?:once\\)?\\)\\)\\>[ \r\n\t]*\\(?:#?\\^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
 
       ;; Type definition
-      (,(rx "("
+      (,(rx ?(
             (zero-or-one "clojure.core/")
             (submatch (or "defstruct" "deftype" "defprotocol"
                           "defrecord"))
