@@ -439,8 +439,13 @@ Called by `imenu--generic-function'."
       ;; after:  "(\\(?:clojure\\.core/\\)?\\(fn\\)[ \t]+\\(?:#?\\^\\sw+[ \t]*\\)?\\(t\\sw+\\)?"
 
       ;; lambda arguments - %, %1, %2, etc
-      ("\\<%[1-9]?"
-       (0 font-lock-variable-name-face))
+       (,(rx word-start
+             ?%
+             (zero-or-one (any "1-9")))
+        (0 font-lock-variable-name-face))
+       ;; before: "\\<%[1-9]?"
+       ;; after:  "\\<%[1-9]?"
+
       ;; Special forms
       (,(concat
          "("
