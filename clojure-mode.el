@@ -458,21 +458,23 @@ Called by `imenu--generic-function'."
       ;; after:  "(\\(\\(?:\\.\\|catch\\|d\\(?:ef\\|o\\)\\|f\\(?:inally\\|n\\)\\|if\\|l\\(?:et\\|oop\\)\\|monitor-e\\(?:nter\\|xit\\)\\|new\\|quote\\|recur\\|set!\\|t\\(?:hrow\\|ry\\)\\|var\\)\\)\\>"
 
       ;; Built-in binding and flow of control forms
-      (,(concat
-         "(\\(?:clojure.core/\\)?"
-         (regexp-opt
-          '("letfn" "case" "cond" "cond->" "cond->>" "condp"
-            "for" "when" "when-not" "when-let" "when-first" "when-some"
-            "if-let" "if-not" "if-some"
-            ".." "->" "->>" "as->" "doto" "and" "or"
-            "dosync" "doseq" "dotimes" "dorun" "doall"
-            "load" "import" "unimport" "ns" "in-ns" "refer"
-            "with-open" "with-local-vars" "binding"
-            "with-redefs" "with-redefs-fn"
-            "gen-class" "gen-and-load-class" "gen-and-save-class"
-            "handler-case" "handle" "declare") t)
-         "\\>")
+      (,(rx ?(
+            (zero-or-one "clojure.core/")
+            (submatch (or "letfn" "case" "cond" "cond->" "cond->>" "condp"
+                          "for" "when" "when-not" "when-let" "when-first" "when-some"
+                          "if-let" "if-not" "if-some"
+                          ".." "->" "->>" "as->" "doto" "and" "or"
+                          "dosync" "doseq" "dotimes" "dorun" "doall"
+                          "load" "import" "unimport" "ns" "in-ns" "refer"
+                          "with-open" "with-local-vars" "binding"
+                          "with-redefs" "with-redefs-fn"
+                          "gen-class" "gen-and-load-class" "gen-and-save-class"
+                          "handler-case" "handle" "declare"))
+            word-end)
        1 font-lock-keyword-face)
+      ;; before: "(\\(?:clojure.core/\\)?\\(->>?\\|\\.\\.\\|a\\(?:nd\\|s->\\)\\|binding\\|c\\(?:ase\\|ond\\(?:->>?\\|p\\)?\\)\\|d\\(?:eclare\\|o\\(?:all\\|run\\|s\\(?:eq\\|ync\\)\\|t\\(?:imes\\|o\\)\\)\\)\\|for\\|gen-\\(?:\\(?:and-\\(?:\\(?:load\\|save\\)-\\)\\)?class\\)\\|handle\\(?:r-case\\)?\\|i\\(?:f-\\(?:let\\|not\\|some\\)\\|mport\\|n-ns\\)\\|l\\(?:etfn\\|oad\\)\\|ns\\|or\\|refer\\|unimport\\|w\\(?:hen\\(?:-\\(?:first\\|let\\|not\\|some\\)\\)?\\|ith-\\(?:local-vars\\|open\\|redefs\\(?:-fn\\)?\\)\\)\\)\\>"
+      ;; after:  "(\\(?:clojure\\.core/\\)?\\(\\(?:->>?\\|\\.\\.\\|a\\(?:nd\\|s->\\)\\|binding\\|c\\(?:ase\\|ond\\(?:->>?\\|p\\)?\\)\\|d\\(?:eclare\\|o\\(?:all\\|run\\|s\\(?:eq\\|ync\\)\\|t\\(?:imes\\|o\\)\\)\\)\\|for\\|gen-\\(?:\\(?:and-\\(?:\\(?:load\\|save\\)-\\)\\)?class\\)\\|handle\\(?:r-case\\)?\\|i\\(?:f-\\(?:let\\|not\\|some\\)\\|mport\\|n-ns\\)\\|l\\(?:etfn\\|oad\\)\\|ns\\|or\\|refer\\|unimport\\|w\\(?:hen\\(?:-\\(?:first\\|let\\|not\\|some\\)\\)?\\|ith-\\(?:local-vars\\|open\\|redefs\\(?:-fn\\)?\\)\\)\\)\\)\\>"
+
       (,(concat
          "\\<"
          (regexp-opt
