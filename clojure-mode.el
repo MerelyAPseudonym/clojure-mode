@@ -511,8 +511,14 @@ Called by `imenu--generic-function'."
       ;; after:  "\\<\\(\\(?:false\\|nil\\|true\\)\\)\\>"
 
       ;; Character literals - \1, \a, \newline, \u0000
-      ("\\\\\\([[:punct:]]\\|[a-z0-9]+\\>\\)"
+      (,(rx ?\\
+            (submatch (or punctuation
+                          (and (one-or-more (any "a-z" "0-9"))
+                               word-end))))
        0 'clojure-character-face)
+      ;; before: "\\\\\\([[:punct:]]\\|[a-z0-9]+\\>\\)"
+      ;; after:  "\\\\\\([[:punct:]]\\|[0-9a-z]+\\>\\)"
+
       ;; Constant values (keywords), including as metadata e.g. ^:static
       ("\\<^?\\(:\\(\\sw\\|\\s_\\)+\\(\\>\\|\\_>\\)\\)"
        1 'clojure-keyword-face)
