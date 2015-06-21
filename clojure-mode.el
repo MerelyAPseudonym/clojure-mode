@@ -373,18 +373,28 @@ Called by `imenu--generic-function'."
       ;; after:  "(\\(?:clojure\\.core/\\)?\\(\\(?:def\\(?:once\\)?\\)\\)\\>[ \r\n\t]*\\(?:#?\\^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
 
       ;; Type definition
-      (,(concat "(\\(?:clojure.core/\\)?\\("
-                (regexp-opt '("defstruct" "deftype" "defprotocol"
-                              "defrecord"))
-                ;; type declarations
-                "\\)\\>"
-                ;; Any whitespace
-                "[ \r\n\t]*"
-                ;; Possibly type or metadata
-                "\\(?:#?^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*"
-                "\\(\\sw+\\)?")
+      (,(rx "("
+            (zero-or-one "clojure.core/")
+            (submatch (or "defstruct" "deftype" "defprotocol"
+                          "defrecord"))
+            ;; type declarations
+            word-end
+            ;; Any whitespace
+            (zero-or-more (any ?\s ?\r ?\n ?\t))
+            ;; Possibly type or metadata
+            (zero-or-more (zero-or-one ?#)
+                          ?^
+                          (or (and ?{
+                                   (zero-or-more (not (any ?})))
+                                   ?})
+                              (one-or-more (syntax word)))
+                          (zero-or-more (any ?\s ?\r ?\n ?\t)))
+            (zero-or-one (submatch (one-or-more (syntax word)))))
        (1 font-lock-keyword-face)
        (2 font-lock-type-face nil t))
+      ;; before: "(\\(?:clojure.core/\\)?\\(\\(?:def\\(?:protocol\\|record\\|struct\\|type\\)\\)\\)\\>[ \r\n\t]*\\(?:#?^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
+      ;; after:  "(\\(?:clojure\\.core/\\)?\\(\\(?:def\\(?:protocol\\|record\\|struct\\|type\\)\\)\\)\\>[ \r\n\t]*\\(?:#?\\^\\(?:{[^}]*}\\|\\sw+\\)[ \r\n\t]*\\)*\\(\\sw+\\)?"
+
       ;; Function definition (anything that starts with def and is not
       ;; listed above)
       (,(concat "(\\(?:[a-z\.-]+/\\)?\\(def\[a-z\-\]*-?\\)"
