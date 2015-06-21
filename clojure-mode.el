@@ -491,8 +491,17 @@ Called by `imenu--generic-function'."
       ;; after:  "\\<\\(\\(?:\\*\\(?:\\(?:a\\(?:gent\\|llow-unresolved-vars\\|ssert\\)\\|c\\(?:lojure-version\\|om\\(?:mand-line-args\\|pile-\\(?:files\\|path\\)\\)\\)\\|err\\|f\\(?:\\(?:il\\|lush-on-newlin\\)e\\)\\|in\\|ma\\(?:cro-meta\\|th-context\\)\\|ns\\|out\\|print-\\(?:dup\\|le\\(?:ngth\\|vel\\)\\|meta\\|readably\\)\\|read-eval\\|source-path\\|use-context-classloader\\|warn-on-reflection\\)\\*\\|[123e]\\)\\)\\)\\>"
 
       ;; Dynamic variables - *something* or @*something*
-      ("\\(?:\\<\\|/\\)@?\\(\\*[a-z-]*\\*\\)\\>"
+      (,(rx (or word-start
+                ?/)
+            (zero-or-one ?@)
+            (submatch ?*
+                      (zero-or-more (any "a-z" ?-))
+                      ?*)
+            word-end)
        1 font-lock-variable-name-face)
+      ;; before: "\\(?:\\<\\|/\\)@?\\(\\*[a-z-]*\\*\\)\\>"
+      ;; after:  "\\(?:\\<\\|/\\)@?\\(\\*[-a-z]*\\*\\)\\>"
+
       ;; Global constants - nil, true, false
       (,(concat
          "\\<"
