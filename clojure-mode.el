@@ -447,15 +447,16 @@ Called by `imenu--generic-function'."
        ;; after:  "\\<%[1-9]?"
 
       ;; Special forms
-      (,(concat
-         "("
-         (regexp-opt
-          '("def" "do" "if" "let" "var" "fn" "loop"
-            "recur" "throw" "try" "catch" "finally"
-            "set!" "new" "."
-            "monitor-enter" "monitor-exit" "quote") t)
-         "\\>")
+      (,(rx ?(
+            (submatch (or "def" "do" "if" "let" "var" "fn" "loop"
+                          "recur" "throw" "try" "catch" "finally"
+                          "set!" "new" "."
+                          "monitor-enter" "monitor-exit" "quote"))
+            word-end)
        1 font-lock-keyword-face)
+      ;; before: "(\\(\\.\\|catch\\|d\\(?:ef\\|o\\)\\|f\\(?:inally\\|n\\)\\|if\\|l\\(?:et\\|oop\\)\\|monitor-e\\(?:nter\\|xit\\)\\|new\\|quote\\|recur\\|set!\\|t\\(?:hrow\\|ry\\)\\|var\\)\\>"
+      ;; after:  "(\\(\\(?:\\.\\|catch\\|d\\(?:ef\\|o\\)\\|f\\(?:inally\\|n\\)\\|if\\|l\\(?:et\\|oop\\)\\|monitor-e\\(?:nter\\|xit\\)\\|new\\|quote\\|recur\\|set!\\|t\\(?:hrow\\|ry\\)\\|var\\)\\)\\>"
+
       ;; Built-in binding and flow of control forms
       (,(concat
          "(\\(?:clojure.core/\\)?"
