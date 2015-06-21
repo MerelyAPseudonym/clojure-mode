@@ -520,8 +520,16 @@ Called by `imenu--generic-function'."
       ;; after:  "\\\\\\([[:punct:]]\\|[0-9a-z]+\\>\\)"
 
       ;; Constant values (keywords), including as metadata e.g. ^:static
-      ("\\<^?\\(:\\(\\sw\\|\\s_\\)+\\(\\>\\|\\_>\\)\\)"
+      (,(rx word-start
+            (zero-or-one ?^)
+            (submatch ?:
+                      (one-or-more (submatch (or (syntax word)
+                                                 (syntax symbol))))
+                      (submatch (or word-end
+                                    symbol-end))))
        1 'clojure-keyword-face)
+      ;; before: "\\<^?\\(:\\(\\sw\\|\\s_\\)+\\(\\>\\|\\_>\\)\\)"
+      ;; after:  "\\<\\^?\\(:\\(\\sw\\|\\s_\\)+\\(\\>\\|\\_>\\)\\)"
 
       ;; cljx annotations (#+clj and #+cljs)
       (,(rx "#+clj"
