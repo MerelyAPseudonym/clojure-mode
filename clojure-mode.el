@@ -503,12 +503,13 @@ Called by `imenu--generic-function'."
       ;; after:  "\\(?:\\<\\|/\\)@?\\(\\*[-a-z]*\\*\\)\\>"
 
       ;; Global constants - nil, true, false
-      (,(concat
-         "\\<"
-         (regexp-opt
-          '("true" "false" "nil") t)
-         "\\>")
+      (,(rx word-start
+            (submatch (or "true" "false" "nil"))
+            word-end)
        0 font-lock-constant-face)
+      ;; before: "\\<\\(false\\|nil\\|true\\)\\>"
+      ;; after:  "\\<\\(\\(?:false\\|nil\\|true\\)\\)\\>"
+
       ;; Character literals - \1, \a, \newline, \u0000
       ("\\\\\\([[:punct:]]\\|[a-z0-9]+\\>\\)"
        0 'clojure-character-face)
